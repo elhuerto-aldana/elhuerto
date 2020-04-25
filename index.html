@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>El Huerto</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="CSS/index.css">
+</head>
+<body>
+	<div id="cuerpo" v-if="todo">
+		<div class="top-bar">
+			<div class="banner">
+				<h1 class="banner-title">El Huerto</h1>
+			</div>
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<a class="navbar-brand brand" href="#">
+					<img src="IMG/sweet-pepper-24.png">
+					El Huerto
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#barra-resp" aria-controls="barra-resp" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="barra-resp">
+					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+						<li v-for="opcion in opciones" class="nav-item">
+							<a class="nav-link" href="#" v-on:click="navOpt(opcion)">{{ opcion }}</a>
+						</li>
+					</ul>
+					<span>
+						<a href="#"><img src="IMG/cart-73-24.png"> Carrito</a>
+					</span>
+				</div>
+			</nav>
+		</div>
+		<div class="container" v-if="principal">
+			
+		</div>
+		<div class="container" v-if="categoria">
+			<h2>{{view_prods}}</h2>
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th scope="col" style="width: 30%">Nombre</th>
+						<th scope="col" style="width: 20%">Precio</th>
+						<th scope="col" style="width: 30%">Cantidad</th>
+						<th scope="col" style="width: 20%">Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="prod in prods">
+						<td>{{prod.name}}</td>
+						<td>{{prod.price | quetzales}} / {{prod.unit}}</td>
+						<td>
+							<form class="form-inline">
+								<button type="button" class="btn btn-danger s-item" v-on:click="negativo(prod.id)">-</button>
+								<input class="form-control s-item s-cantidad" type="text" minlength="1" maxlength="2" size="1" v-model="carrito[prod.id]">
+								<button type="button" class="btn btn-success s-item" v-on:click="positivo(prod.id)">+</button>
+							</form>
+						</td>
+						<td>{{ carrito[prod.id]*prod.price | quetzales}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="container" v-if="carrito">
+			
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="JS/index.js"></script>
+</body>
+</html>
