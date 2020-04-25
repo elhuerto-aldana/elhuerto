@@ -4,7 +4,7 @@ var app = new Vue({
 		todo: false,
 		principal: true,
 		categoria: false,
-		carrito: false,
+		cart: false,
 		opciones: [],
 		inventarios: {},
 		view_prods: "",
@@ -25,6 +25,7 @@ var app = new Vue({
 		navOpt: function (opcion) {
 			this.view_prods = opcion;
 			this.principal = false;
+			this.cart = false;
 			this.categoria = true;
 		},
 		negativo: function(id) {
@@ -36,6 +37,16 @@ var app = new Vue({
 		positivo: function(id) {
 			this.carrito[id] += 1;
 			this.$forceUpdate();
+		},
+		navSup: function () {
+			this.cart = false;
+			this.categoria = false;
+			this.principal = true;
+		},
+		navCart: function () {
+			this.categoria = false;
+			this.principal = false;
+			this.cart = true;
 		}
 	},
 	computed: {

@@ -55,3 +55,16 @@ a:hover {
 	width: 2em;
 	text-align: center;
 }
+.jumbotron {
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgb(0,144,0,0.2);
+	background-color: #FFFFFF !important;
+	color: #009000;
+	margin-top: 2em;
+}
+.marca {
+	font-family: 'Dancing Script', cursive;
+	font-weight: bold;
+	color: black;
+}
