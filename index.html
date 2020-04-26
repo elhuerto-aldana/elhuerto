@@ -38,7 +38,7 @@
 		</div>
 		<div class="container" v-if="principal">
 			<div class="jumbotron">
-				<h1 class="display-4">Bienvenida a <span class="marca">El Huerto</span></h1>
+				<h1 class="display-4">Bienvenidos a <span class="marca">El Huerto</span></h1>
 				<p class="lead">Aquí podrás escoger tus productos y poner tu orden para ser entregada en los siguientes días.</p>
 				<hr class="my-4">
 				<p>Por favor no te olvides de compartir este enlace; te lo agradeceremos muchísimo. <3</p>
@@ -56,7 +56,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="prod in prods">
-						<td>{{prod.name}}<br><i>{{prod.price | quetzales}} / {{prod.unit}}</i></td>
+						<td><b>{{prod.name}}</b><br><i>{{prod.price | quetzales}} / {{prod.unit}}</i></td>
 						<td>
 							<form class="form-inline">
 								<button type="button" class="btn btn-danger s-item" v-on:click="negativo(prod.id)">-</button>
@@ -69,8 +69,70 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="container" v-if="carrito">
-			
+		<div class="container" v-if="cart">
+			<h2 class="terminando">Confirmar Orden <img src="IMG/cart-73-32 (1).png"></h2>
+			<p class="disclaimer">Por favor revisa tu orden antes de colocarla. Si deseas hacer cambios, vuelve a la categoría en la que quieres hacerlo. Puedes cambiar los valores y regresar aquí.</p>
+			<div class="row">
+				<div class="col-6">
+					<h3>Datos para Entrega</h3>
+					<form v-on:submit.prevent="onSubmit">
+						<div class="form-group row">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="nombre">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="telefono" class="col-sm-2 col-form-label">Telefono:</label>
+							<div class="col-sm-10">
+								<input type="tel" class="form-control" id="telefono" pattern="[0-9]{8}" placeholder="55555555">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="ciudad" class="col-sm-2 col-form-label">Ciudad:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="ciudad" placeholder="El Naranjo, Mixco">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="direccion" class="col-sm-2 col-form-label">Direccion:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="direccion" placeholder="1 calle 23-45 zona 6">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-10">
+								<button class="btn btn-success enviar">Ordenar</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-6">
+					<h3>Resumen de Compra</h3>
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th scope="col" style="width: 30%">Poducto</th>
+								<th scope="col" style="width: 45%">Cantidad</th>
+								<th scope="col" style="width: 25%">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="item in checkout()">
+								<td><b>{{por_llaves[item.id].name}}</b><br><i>{{por_llaves[item.id].price | quetzales}} / {{por_llaves[item.id].unit}}</i></td>
+								<td>{{ item.ammo }}</td>
+								<td>{{ item.ammo*por_llaves[item.id].price | quetzales}}</td>
+							</tr>
+							<tr class="totales">
+								<td><b>Total:</b></td>
+								<td></td>
+								<td><b>{{total | quetzales}}</b></td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="disclaimer">El precio final aumentará dependiendo de la ciudad y la zona a la que se hará la entrega.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>

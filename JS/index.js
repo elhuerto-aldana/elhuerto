@@ -5,8 +5,10 @@ var app = new Vue({
 		principal: true,
 		categoria: false,
 		cart: false,
+		total: 0,
 		opciones: [],
 		inventarios: {},
+		por_llaves: {},
 		view_prods: "",
 		carrito: {}
 	},
@@ -18,9 +20,20 @@ var app = new Vue({
 				for (var j = 0; j < this.inventarios[this.opciones[i]].length; j++) {
 					var code = this.inventarios[this.opciones[i]][j]
 					this.carrito[code.id] = 0;
+					this.por_llaves[code.id] = {name: code.name, price: code.price, unit: code.unit};
 				}
 			}
 			this.todo = true;
+		},
+		checkout: function () {
+			var llaves = Object.keys(this.carrito);
+			var validos = [];
+			for (var l = 0; l < llaves.length; l++) {
+				if (this.carrito[llaves[l]] != 0) {
+					validos.push({id: llaves[l], ammo: this.carrito[llaves[l]]});
+				}
+			}
+			return validos;
 		},
 		navOpt: function (opcion) {
 			this.view_prods = opcion;
@@ -44,6 +57,11 @@ var app = new Vue({
 			this.principal = true;
 		},
 		navCart: function () {
+			var compras = this.checkout();
+			this.total = 0;
+			for (var t = 0; t < compras.length; t++) {
+				this.total += this.por_llaves[compras[t].id].price * compras[t].ammo;
+			}
 			this.categoria = false;
 			this.principal = false;
 			this.cart = true;
