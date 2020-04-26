@@ -5,11 +5,14 @@ var app = new Vue({
 		principal: true,
 		categoria: false,
 		cart: false,
+		olvido: false,
+		done: false,
 		total: 0,
 		opciones: [],
 		inventarios: {},
 		por_llaves: {},
 		view_prods: "",
+		user: {name: '', phone: '', city: '', addr: ''},
 		carrito: {}
 	},
 	methods: {
@@ -39,6 +42,7 @@ var app = new Vue({
 			this.view_prods = opcion;
 			this.principal = false;
 			this.cart = false;
+			this.done = false;
 			this.categoria = true;
 		},
 		negativo: function(id) {
@@ -54,6 +58,7 @@ var app = new Vue({
 		navSup: function () {
 			this.cart = false;
 			this.categoria = false;
+			this.done = false;
 			this.principal = true;
 		},
 		navCart: function () {
@@ -64,7 +69,62 @@ var app = new Vue({
 			}
 			this.categoria = false;
 			this.principal = false;
+			this.done = false;
 			this.cart = true;
+		},
+		postOrder: function () {
+			if (this.total == 0) {
+				alert('¿Por qué no has escogido nada?\nNo es posible colocar una orden vacía.')
+			} else {
+				if ((this.user.name == '') || (this.user.phone == '') || (this.user.city == '') || (this.user.addr == '')) {
+					this.olvido = true;
+				} else {
+					this.olvido = false;
+					var seguro = confirm('¿Deseas colocar tu orden?');
+					if (seguro) {
+						var self = this;
+						var params = '';
+						var ahora = new Date();
+						var tiempo = ahora.getTime();
+						var orden = JSON.stringify(self.checkout());
+						params += '&stamp=' + tiempo;
+						params += '&name=' + self.user.name;
+						params += '&tel=' + self.user.phone;
+						params += '&dir=' + self.user.addr + ' ' + self.user.city;
+						params += '&orden=' + orden;
+						$.ajax({
+							url: 'https://script.google.com/macros/s/AKfycbzIpbFwTkuPjr3qTwbQhfPM3T39ymDoYLEXPFxGNSOhWix4nKE0/exec?option=placeOrd' + params,
+							method: 'GET',
+							success: function (data) {
+								var response = JSON.parse(data);
+								if (response.stamp == tiempo) {
+									self.bien();
+								} else {
+									self.mal();
+								}
+							},
+							error: function (error) {
+								self.mal();
+							}
+						});
+					}
+				}
+			}		
+		},
+		bien: function () {
+			this.total = 0;
+			this.user = {name: '', phone: '', city: '', addr: ''};
+			var temp = Object.keys(this.carrito);
+			for (var x = 0; x < temp.length; x++) {
+				this.carrito[temp[x]] = 0;
+			}
+			this.categoria = false;
+			this.principal = false;
+			this.cart = false;
+			this.done = true;
+		},
+		mal: function () {
+			alert('¡Ha sucedido un error!\nLo sentimos, ¿puedes intentarlo otra vez, por favor?');
 		}
 	},
 	computed: {
