@@ -17,7 +17,7 @@
 				<h1 class="banner-title">El Huerto</h1>
 			</div>
 			<nav class="navbar navbar-expand-lg navbar-light">
-				<a class="navbar-brand brand" href="#" v-on:click="navSup()">
+				<a class="navbar-brand brand" href="#" data-toggle="collapse" data-target="#barra-resp" v-on:click="navSup()">
 					<img src="IMG/sweet-pepper-24.png">
 					El Huerto
 				</a>
@@ -27,11 +27,12 @@
 				<div class="collapse navbar-collapse" id="barra-resp">
 					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 						<li v-for="opcion in opciones" class="nav-item">
-							<a class="nav-link" href="#" v-on:click="navOpt(opcion)">{{ opcion }}</a>
+							<a class="nav-link" href="#" data-toggle="collapse" data-target="#barra-resp" v-on:click="navOpt(opcion)">{{ opcion }}</a>
 						</li>
 					</ul>
+					<div class="dropdown-divider"></div>
 					<span>
-						<a href="#" v-on:click="navCart()"><img src="IMG/cart-73-24.png"> Carrito</a>
+						<a href="#" data-toggle="collapse" data-target="#barra-resp" v-on:click="navCart()"><img src="IMG/cart-73-24.png"> Carrito</a>
 					</span>
 				</div>
 			</nav>
