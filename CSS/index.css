@@ -83,3 +83,7 @@ a:hover {
 .enviar {
 	width: 15em;
 }
+.telefonos {
+	text-align: right;
+	font-size: 0.9em;
+}

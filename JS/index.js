@@ -12,7 +12,7 @@ var app = new Vue({
 		inventarios: {},
 		por_llaves: {},
 		view_prods: "",
-		user: {name: '', phone: '', city: '', addr: ''},
+		user: {name: '', phone: '', city: '', addr: '', pay: '', trans: ''},
 		carrito: {}
 	},
 	methods: {
@@ -91,6 +91,7 @@ var app = new Vue({
 						params += '&name=' + self.user.name;
 						params += '&tel=' + self.user.phone;
 						params += '&dir=' + self.user.addr + ' ' + self.user.city;
+						params += '&pay=' + self.user.pay + ' ' + self.user.trans;
 						params += '&orden=' + orden;
 						$.ajax({
 							url: 'https://script.google.com/macros/s/AKfycbzIpbFwTkuPjr3qTwbQhfPM3T39ymDoYLEXPFxGNSOhWix4nKE0/exec?option=placeOrd' + params,
@@ -113,7 +114,7 @@ var app = new Vue({
 		},
 		bien: function () {
 			this.total = 0;
-			this.user = {name: '', phone: '', city: '', addr: ''};
+			this.user = {name: '', phone: '', city: '', addr: '', pay: '', trans: ''};
 			var temp = Object.keys(this.carrito);
 			for (var x = 0; x < temp.length; x++) {
 				this.carrito[temp[x]] = 0;
