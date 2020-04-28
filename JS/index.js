@@ -80,7 +80,7 @@ var app = new Vue({
 					this.olvido = true;
 				} else {
 					this.olvido = false;
-					var seguro = confirm('¿Deseas colocar tu orden?');
+					var seguro = confirm('Estás a punto de colocar to orden.\nSi ya revisaste todo, ¿deseas continuar?');
 					if (seguro) {
 						var self = this;
 						var params = '';

@@ -1,0 +1,76 @@
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	var app = new Vue({
+		el: "#app",
+		data: {
+			ordenes: {},
+			mercado: {},
+			altEmail: "",
+			mensajes: "",
+			bien: false,
+			mal: false
+		},
+		methods: {
+			messenger: function(confirmation, nosFueBien) {
+				if (confirmation) {
+					this.mensajes = nosFueBien;
+					this.bien = true;
+				} else {
+					this.mensajes = "Ha ocurrido un error. Por favor intenta de nuevo o contacta a Soporte Técnico (Rony).";
+					this.mal = true;
+				}
+				Utilities.sleep(4000);
+				this.bien = false;
+				this.mal = false;
+			},
+			setSend: function (id) {
+				var self = this;
+				google.script.run.withSuccessHandler(function (confirmation) {
+					self.messenger(confirmation, "Se actualizó el costo de envío exitosamente.");
+				}).addEnvio(id, self.ordenes[id].send);
+			},
+			getMarket: function () {
+				var self = this;
+				google.script.run.withSuccessHandler(function (confirmation) {
+					self.messenger(confirmation, "Se ha enviado la lista de mercado en un archivo XLSX al correo especificado.");
+				}).listaMercado(self.altEmail);
+			},
+			makeOrd: function (id) {
+				var self = this;
+				google.script.run.withSuccessHandler(function (confirmation) {
+					self.messenger(confirmation, "Se ha enviado la orden de compra " + id + " al correo especificado.");
+				}).ordenSimple(id, self.altEmail);
+			},
+			getOrders: function () {
+				var self = this;
+				google.script.run.withSuccessHandler(function (confirmation) {
+					self.messenger(confirmation, "Se ha enviado todas las órdenes de compra al correo especificado.")
+				}).ordenTodas(self.altEmail);
+			},
+			resetAll: function () {
+				var self = this;
+				var segura = confirm('Estás a punto de enviarte todas las órdenes de compra y la lista de mercado.\nDespués de eso se eliminarán todas las órdenes hasta ahora.\n¿Estás segura de querer continuar?');
+				if (segura){
+					google.script.run.withSuccessHandler(function (confirmation) {
+						self.messenger(confirmation, "Se envió todas las órdenes de compra y la lista de mercado al correo especificado.\nSe han eliminado también todas las órdenes en el sistema.")
+						location.reload();
+					}).corte(self.altEmail);
+				};
+			},
+			loadData: function () {
+				var self = this;
+				google.script.run.withSuccessHandler(function (ordenesDB) {
+					self.ordenes = JSON.parse(ordenesDB);
+				}).getOrdenes();
+				google.script.run.withSuccessHandler(function (mercadoDB) {
+					self.mercado = JSON.parse(mercadoDB);
+				}).alMercado();
+			}
+		},
+		created: function () {
+			this.loadData();
+		}
+	});
+</script>
