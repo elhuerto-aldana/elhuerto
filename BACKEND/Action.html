@@ -21,9 +21,6 @@
 					this.mensajes = "Ha ocurrido un error. Por favor intenta de nuevo o contacta a Soporte Técnico (Rony).";
 					this.mal = true;
 				}
-				Utilities.sleep(4000);
-				this.bien = false;
-				this.mal = false;
 			},
 			setSend: function (id) {
 				var self = this;
@@ -39,25 +36,54 @@
 			},
 			makeOrd: function (id) {
 				var self = this;
-				google.script.run.withSuccessHandler(function (confirmation) {
-					self.messenger(confirmation, "Se ha enviado la orden de compra " + id + " al correo especificado.");
-				}).ordenSimple(id, self.altEmail);
+				if (self.ordenes[id].send != "") {
+					google.script.run.withSuccessHandler(function (confirmation) {
+						self.messenger(confirmation, "Se ha enviado la orden de compra " + id + " al correo especificado.");
+					}).ordenSimple(id, self.altEmail);
+				} else {
+					self.mensajes = "No se puede generar una orden de compra sin un precio de envío. Por favor, colócale un precio de envío a la orden e intenta volverla a generar.";
+					self.mal = true;
+				}
 			},
 			getOrders: function () {
 				var self = this;
-				google.script.run.withSuccessHandler(function (confirmation) {
-					self.messenger(confirmation, "Se ha enviado todas las órdenes de compra al correo especificado.")
-				}).ordenTodas(self.altEmail);
+				var viol = 0;
+				var llaves = Object.keys(self.ordenes);
+				for (var i = 0; i < llaves.length; i++) {
+					if (self.ordenes[llaves[i]].send == "") {
+						viol += 1
+					}
+				}
+				if (viol == 0){
+					google.script.run.withSuccessHandler(function (confirmation) {
+						self.messenger(confirmation, "Se ha enviado todas las órdenes de compra al correo especificado.")
+					}).ordenTodas(self.altEmail);
+				} else {
+					self.mensajes = "No se puede generar órdenes de compra si a una le falta el precio de envío. Por favor, colócale precio de envío a todas las órdenes e intenta volverlas a generar.";
+					self.mal = true;
+				}
 			},
 			resetAll: function () {
 				var self = this;
-				var segura = confirm('Estás a punto de enviarte todas las órdenes de compra y la lista de mercado.\nDespués de eso se eliminarán todas las órdenes hasta ahora.\n¿Estás segura de querer continuar?');
-				if (segura){
-					google.script.run.withSuccessHandler(function (confirmation) {
-						self.messenger(confirmation, "Se envió todas las órdenes de compra y la lista de mercado al correo especificado.\nSe han eliminado también todas las órdenes en el sistema.")
-						location.reload();
-					}).corte(self.altEmail);
-				};
+				var viol = 0;
+				var llaves = Object.keys(self.ordenes);
+				for (var i = 0; i < llaves.length; i++) {
+					if (self.ordenes[llaves[i]].send == "") {
+						viol += 1
+					}
+				}
+				if (viol == 0){
+					var segura = confirm('Estás a punto de enviarte todas las órdenes de compra y la lista de mercado.\nDespués de eso se eliminarán todas las órdenes hasta ahora.\n¿Estás segura de querer continuar?');
+					if (segura){
+						google.script.run.withSuccessHandler(function (confirmation) {
+							self.messenger(confirmation, "Se envió todas las órdenes de compra y la lista de mercado al correo especificado.\nSe han eliminado también todas las órdenes en el sistema.")
+							location.reload();
+						}).corte(self.altEmail);
+					};
+				} else {
+					self.mensajes = "No se puede generar órdenes de compra si a una le falta el precio de envío. Por favor, colócale precio de envío a todas las órdenes e intenta volverlas a generar.";
+					self.mal = true;
+				}
 			},
 			loadData: function () {
 				var self = this;
