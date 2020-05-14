@@ -116,6 +116,18 @@
 								<input type="text" class="form-control" id="transaccion" v-model="user.trans" required>
 							</div>
 						</div>
+						<div class="form-group row disclaimer" v-if="user.pay == 'Transferencia'">
+							<div class="col-sm-3" style="text-align: right;">
+								<span><b>A nombre de:</b></span><br>
+								<span><b>Banrural:</b></span><br>
+								<span><b>G&T Continental:</b></span>
+							</div>
+							<div class="col-sm-9">
+								<span>Nicole Fernanda Prera Aldana</span><br>
+								<span>3831007310</span><br>
+								<span>029-0085067-8</span>
+							</div>
+						</div>
 						<div class="form-group row totales" v-if="olvido">
 							Todos los campos son obligatorios.
 						</div>
