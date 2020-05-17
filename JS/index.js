@@ -23,7 +23,7 @@ var app = new Vue({
 				for (var j = 0; j < this.inventarios[this.opciones[i]].length; j++) {
 					var code = this.inventarios[this.opciones[i]][j]
 					this.carrito[code.id] = 0;
-					this.por_llaves[code.id] = {name: code.name, price: code.price, unit: code.unit};
+					this.por_llaves[code.id] = {name: code.name, price: code.price, unit: code.unit, metric: code.metric};
 				}
 			}
 			this.todo = true;
@@ -47,12 +47,12 @@ var app = new Vue({
 		},
 		negativo: function(id) {
 			if (this.carrito[id] > 0) {
-				this.carrito[id] -= 1;
+				this.carrito[id] -= this.por_llaves[id]["metric"];
 			}
 			this.$forceUpdate();
 		},
 		positivo: function(id) {
-			this.carrito[id] += 1;
+			this.carrito[id] += this.por_llaves[id]["metric"];
 			this.$forceUpdate();
 		},
 		navSup: function () {
