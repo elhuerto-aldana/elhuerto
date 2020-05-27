@@ -4,6 +4,7 @@ var app = new Vue({
 		todo: false,
 		principal: true,
 		categoria: false,
+		contacto: false,
 		cart: false,
 		olvido: false,
 		done: false,
@@ -41,9 +42,17 @@ var app = new Vue({
 		navOpt: function (opcion) {
 			this.view_prods = opcion;
 			this.principal = false;
+			this.contacto = false;
 			this.cart = false;
 			this.done = false;
 			this.categoria = true;
+		},
+		feedback: function () {
+			this.principal = false;
+			this.categoria = false;
+			this.cart = false;
+			this.done = false;
+			this.contacto = true;
 		},
 		negativo: function(id) {
 			if (this.carrito[id] > 0) {
@@ -56,6 +65,7 @@ var app = new Vue({
 			this.$forceUpdate();
 		},
 		navSup: function () {
+			this.contacto = false;
 			this.cart = false;
 			this.categoria = false;
 			this.done = false;
@@ -68,15 +78,17 @@ var app = new Vue({
 				this.total += this.por_llaves[compras[t].id].price * compras[t].ammo;
 			}
 			this.categoria = false;
+			this.contacto = false;
 			this.principal = false;
 			this.done = false;
 			this.cart = true;
 		},
 		postOrder: function () {
-			if (this.total == 0) {
+			var orden = JSON.stringify(this.checkout());
+			if ((this.total == 0) || (orden.length == 0)) {
 				alert('¿Por qué no has escogido nada?\nNo es posible colocar una orden vacía.')
 			} else {
-				if ((this.user.name == '') || (this.user.phone == '') || (this.user.city == '') || (this.user.addr == '')) {
+				if ((this.user.name == '') || (this.user.phone == '') || (this.user.city == '') || (this.user.addr == '') || (this.user.pay == '')) {
 					this.olvido = true;
 				} else {
 					this.olvido = false;
@@ -86,7 +98,6 @@ var app = new Vue({
 						var params = '';
 						var ahora = new Date();
 						var tiempo = ahora.getTime();
-						var orden = JSON.stringify(self.checkout());
 						params += '&stamp=' + tiempo;
 						params += '&name=' + self.user.name;
 						params += '&tel=' + self.user.phone;
